@@ -1,0 +1,50 @@
+# ============================================================
+# shared/requirements.txt
+# Dependencies shared across all services
+# Installed into .venv
+# ============================================================
+
+# Web framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Database (async SQLAlchemy + PostgreSQL)
+sqlalchemy[asyncio]==2.0.36
+asyncpg==0.30.0
+psycopg2-binary==2.9.10
+pgvector==0.3.6
+
+# Settings management
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Message broker
+aio-pika==9.5.4
+
+# HTTP client (for GST portal, LLM providers)
+httpx==0.28.1
+
+# LLM SDKs
+google-generativeai==0.8.3
+groq==0.13.1
+
+# Observability
+opentelemetry-sdk==1.29.0
+opentelemetry-api==1.29.0
+opentelemetry-exporter-otlp-proto-grpc==1.29.0
+opentelemetry-instrumentation-fastapi==0.50b0
+opentelemetry-instrumentation-sqlalchemy==0.50b0
+
+# Utilities
+python-multipart==0.0.20      # file uploads
+python-jose[cryptography]==3.3.0   # JWT tokens
+passlib[bcrypt]==1.7.4         # password hashing
+email-validator==2.2.0
+tenacity==9.0.0               # retry logic
+structlog==24.4.0              # structured logging
+
+# Date/time
+python-dateutil==2.9.0

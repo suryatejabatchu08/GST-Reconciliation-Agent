@@ -1,0 +1,118 @@
+version: "3.9"
+
+# Local development only — mirrors cloud services
+# Cloud: Supabase (Postgres+pgvector), CloudAMQP (RabbitMQ)
+# Use this when you don't want to use cloud quotas for local dev
+
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    container_name: gst_postgres
+    environment:
+      POSTGRES_DB: gst_reconciliation
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: devpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: gst_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI → http://localhost:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: gst_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+# Uncomment the service blocks below as you build each phase
+# (Phase 2+: ingestion, orchestration, notification, report, gateway)
+
+#  ingestion:
+#    build: ./ingestion_service
+#    container_name: gst_ingestion
+#    env_file: .env
+#    ports:
+#      - "8001:8001"
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+
+#  orchestration:
+#    build: ./orchestration_service
+#    container_name: gst_orchestration
+#    env_file: .env
+#    ports:
+#      - "8002:8002"
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+
+#  notification:
+#    build: ./notification_service
+#    container_name: gst_notification
+#    env_file: .env
+#    ports:
+#      - "8003:8003"
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+
+#  report:
+#    build: ./report_service
+#    container_name: gst_report
+#    env_file: .env
+#    ports:
+#      - "8004:8004"
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      rabbitmq:
+#        condition: service_healthy
+
+#  gateway:
+#    build: ./gateway
+#    container_name: gst_gateway
+#    env_file: .env
+#    ports:
+#      - "8080:8080"
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+  redis_data:
