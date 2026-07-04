@@ -1,0 +1,6 @@
+Date,Voucher No,Party Name,GSTIN/UIN,Voucher Type,Taxable Value,IGST,CGST,SGST/UTGST,CESS,Total Amount,Narration
+15-03-2024,PUR-CSV-001,Tech Supplies Pvt Ltd,29AABCT1332L1ZT,Purchase,"50,000.00",0.00,"4,500.00","4,500.00",0.00,"59,000.00",Office chairs purchase
+18-03-2024,PUR-CSV-002,Maharashtra Office Pvt,27AAKCS9175D1Z5,Purchase,"30,000.00","5,400.00",0.00,0.00,0.00,"35,400.00",Computer peripherals
+22-03-2024,PUR-CSV-003,Delhi Stationery House,07AAACH7409R1ZZ,Purchase,"10,000.00",0.00,"900.00","900.00",0.00,"11,800.00",Office stationery
+28-03-2024,PUR-CSV-004,West Bengal Traders,19AABCU9603R1ZM,Purchase,"25,000.00","4,500.00",0.00,0.00,0.00,"29,500.00",Electrical equipment
+Total,,,,,"1,15,000.00","9,900.00","5,400.00","5,400.00",0.00,"1,35,700.00",

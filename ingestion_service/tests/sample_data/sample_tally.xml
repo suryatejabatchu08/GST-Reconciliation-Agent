@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sample Tally XML export for testing -->
+<!-- Format: TallyPrime ENVELOPE schema -->
+<ENVELOPE>
+  <HEADER>
+    <TALLYREQUEST>Export Data</TALLYREQUEST>
+  </HEADER>
+  <BODY>
+    <EXPORTDATA>
+      <REQUESTDATA>
+        <TALLYMESSAGE>
+          <!-- Purchase Invoice 1: Intrastate (CGST + SGST) -->
+          <VOUCHER VCHTYPE="Purchase" ACTION="Create">
+            <DATE>20240315</DATE>
+            <VOUCHERNUMBER>PUR-001</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Tech Supplies Pvt Ltd</PARTYLEDGERNAME>
+            <GSTIN>29AABCT1332L1ZT</GSTIN>
+            <NARRATION>Office furniture purchase - 10 ergonomic chairs</NARRATION>
+            <AMOUNT>-59000.00</AMOUNT>
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>Ergonomic Chair</STOCKITEMNAME>
+              <AMOUNT>-50000.00</AMOUNT>
+              <ACTUALQTY>10 Nos</ACTUALQTY>
+              <RATE>5000.00/Nos</RATE>
+            </ALLINVENTORYENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>CGST @9%</LEDGERNAME>
+              <AMOUNT>-4500.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>SGST @9%</LEDGERNAME>
+              <AMOUNT>-4500.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+          </VOUCHER>
+
+          <!-- Purchase Invoice 2: Interstate (IGST) -->
+          <VOUCHER VCHTYPE="Purchase" ACTION="Create">
+            <DATE>20240318</DATE>
+            <VOUCHERNUMBER>PUR-002</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Mumbai Traders</PARTYLEDGERNAME>
+            <GSTIN>27AAKCS9175D1Z5</GSTIN>
+            <NARRATION>Computer peripherals - keyboards and mice</NARRATION>
+            <AMOUNT>-35400.00</AMOUNT>
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>Computer Peripherals</STOCKITEMNAME>
+              <AMOUNT>-30000.00</AMOUNT>
+            </ALLINVENTORYENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>IGST @18%</LEDGERNAME>
+              <AMOUNT>-5400.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+          </VOUCHER>
+
+          <!-- Purchase Invoice 3: With CESS -->
+          <VOUCHER VCHTYPE="Purchase" ACTION="Create">
+            <DATE>20240322</DATE>
+            <VOUCHERNUMBER>PUR-003</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Delhi Auto Parts</PARTYLEDGERNAME>
+            <GSTIN>07AAACH7409R1ZZ</GSTIN>
+            <NARRATION>Vehicle spare parts</NARRATION>
+            <AMOUNT>-31200.00</AMOUNT>
+            <ALLINVENTORYENTRIES.LIST>
+              <STOCKITEMNAME>Auto Parts</STOCKITEMNAME>
+              <AMOUNT>-25000.00</AMOUNT>
+            </ALLINVENTORYENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>IGST @18%</LEDGERNAME>
+              <AMOUNT>-4500.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+            <LEDGERENTRIES.LIST>
+              <LEDGERNAME>CESS @1%</LEDGERNAME>
+              <AMOUNT>-250.00</AMOUNT>
+            </LEDGERENTRIES.LIST>
+          </VOUCHER>
+
+          <!-- Non-purchase voucher — should be ignored -->
+          <VOUCHER VCHTYPE="Receipt" ACTION="Create">
+            <DATE>20240320</DATE>
+            <VOUCHERNUMBER>REC-001</VOUCHERNUMBER>
+            <PARTYLEDGERNAME>Customer XYZ</PARTYLEDGERNAME>
+            <AMOUNT>10000.00</AMOUNT>
+          </VOUCHER>
+        </TALLYMESSAGE>
+      </REQUESTDATA>
+    </EXPORTDATA>
+  </BODY>
+</ENVELOPE>

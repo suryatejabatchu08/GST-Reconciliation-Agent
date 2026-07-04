@@ -1,0 +1,6 @@
+Invoice Date,Invoice Number,Vendor Name,GSTIN/UIN of Vendor,Taxable Amount,IGST,CGST,SGST,Total,Status,Item Description
+15-03-2024,ZBILL-001,Tech Supplies Pvt Ltd,29AABCT1332L1ZT,50000.00,0.00,4500.00,4500.00,59000.00,Open,Office ergonomic chairs x10
+18-03-2024,ZBILL-002,Mumbai Trading Co,27AAKCS9175D1Z5,30000.00,5400.00,0.00,0.00,35400.00,Open,Computer keyboards and mice
+22-03-2024,ZBILL-003,Delhi Office Hub,07AAACH7409R1ZZ,10000.00,0.00,900.00,900.00,11800.00,Open,Stationery items
+25-03-2024,ZBILL-004,Chennai Traders,33AADCB2230M1Z3,20000.00,3600.00,0.00,0.00,23600.00,Open,Industrial equipment
+31-03-2024,ZBILL-VOID,Cancelled Vendor,29XXXXX1234X1ZZ,5000.00,0.00,450.00,450.00,5900.00,Void,This should be skipped

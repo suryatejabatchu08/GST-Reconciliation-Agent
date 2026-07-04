@@ -1,0 +1,13 @@
+# ============================================================
+# ingestion_service/requirements.txt
+# Dependencies specific to the Ingestion Service
+# (shared/requirements.txt must also be installed)
+# ============================================================
+
+lxml==5.3.0           # Tally XML parsing
+openpyxl==3.1.5       # Excel file support (for future bank statement parsing)
+python-magic==0.4.27  # File type detection (MIME)
+aiofiles==24.1.0      # Async file I/O for temp file handling
+pytest==8.3.4         # Testing
+pytest-asyncio==0.24.0
+httpx==0.28.1         # Already in shared, listed here for test client
