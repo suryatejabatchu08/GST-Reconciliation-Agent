@@ -79,6 +79,7 @@ class Settings(BaseSettings):
 
     # ── Rate Limits ────────────────────────────────────────
     gemini_rpm_limit: int = 15          # 15 req/min (Gemini free tier)
+    groq_rpm_limit: int = 30            # 30 req/min (Groq free tier)
     groq_rpd_limit: int = 14400         # 14,400 req/day (Groq free tier)
     gst_portal_rph_limit: int = 100     # 100 req/hour per GSTIN
 
