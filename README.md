@@ -1,67 +1,66 @@
-# GST Reconciliation Agent
+<div align="center">
+  <h1>GST Reconciliation Agent</h1>
+  <p><strong>AI-powered GST reconciliation system for Indian CAs and finance teams.</strong></p>
+  <p>Reduces 6–10 hours of manual GSTR-2A vs purchase register reconciliation to under 5 minutes.</p>
 
-> **AI-powered GST reconciliation system for Indian CAs and finance teams.**  
-> Reduces 6–10 hours of manual GSTR-2A vs purchase register reconciliation to under 5 minutes.  
-> **100% free-tier infra** — ₹0/month up to 300 jobs.
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.11-3776AB.svg?style=flat&logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/Next.js-000000.svg?style=flat&logo=nextdotjs&logoColor=white" alt="Next.js" />
+    <img src="https://img.shields.io/badge/RabbitMQ-FF6600.svg?style=flat&logo=rabbitmq&logoColor=white" alt="RabbitMQ" />
+    <img src="https://img.shields.io/badge/PostgreSQL-336791.svg?style=flat&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  </p>
+</div>
 
 ---
 
 ## Architecture
 
-```
-Upload (Tally/Zoho/PDF/CSV)
-        │
-        ▼
-┌───────────────────┐
-│  Ingestion Service │ :8001
-│  (parse + store)   │
-└─────────┬─────────┘
-          │ invoice.ingested
-          ▼
-     [RabbitMQ — CloudAMQP]
-          │
-          ▼
-┌───────────────────────────────────────────┐
-│          Orchestration Service :8002       │
-│  LangGraph: Normalise (Gemini) →           │
-│    ┌─ GSTR-2A Matcher                      │
-│    ├─ GSTR-1 Validator      (parallel)     │
-│    └─ Tax Liability Checker                │
-│  → Mismatch Classifier (Groq/Llama)        │
-└────────────────┬──────────────────────────┘
-     mismatch.found │    job.progress.* │
-        ┌───────────┘           │
-        ▼                       ▼
-┌──────────────────┐   ┌──────────────────────┐
-│ Notification Svc │   │  WebSocket Gateway    │ :8080
-│  :8003           │   │  → Next.js Dashboard  │
-│  (email drafts)  │   └──────────────────────┘
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  Report Service  │ :8004
-│  (PDF + Excel)   │
-└──────────────────┘
+```mermaid
+flowchart TD
+    %% Define Styles
+    classDef service fill:#f9f9f9,stroke:#333,stroke-width:2px;
+    classDef broker fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
+    classDef client fill:#d1ecf1,stroke:#17a2b8,stroke-width:2px;
+
+    Upload([Upload<br/>Tally / Zoho / PDF / CSV]):::client --> Ingestion[Ingestion Service :8001<br/>parse + store]:::service
+    Ingestion -- invoice.ingested --> RabbitMQ[(RabbitMQ — CloudAMQP)]:::broker
+    RabbitMQ --> Orchestration
+    
+    subgraph Orchestration [Orchestration Service :8002]
+        direction TB
+        Norm(LangGraph: Normalise<br/>Gemini) --> Matcher(GSTR-2A Matcher)
+        Norm --> Validator(GSTR-1 Validator)
+        Norm --> Checker(Tax Liability Checker)
+        Matcher & Validator & Checker --> Classifier(Mismatch Classifier<br/>Groq/Llama)
+    end
+    
+    Classifier -- mismatch.found --> Notification[Notification Svc :8003<br/>email drafts]:::service
+    Classifier -- job.progress.* --> Gateway[WebSocket Gateway :8080]:::service
+    Gateway -.-> Dashboard([Next.js Dashboard]):::client
+    Notification --> Report[Report Service :8004<br/>PDF + Excel]:::service
 ```
 
 ---
 
-## Tech Stack
+## Tech Stack & Infra
 
-| Layer | Technology | Cost |
+> **100% free-tier infra** — ₹0/month up to 300 jobs.
+
+| Layer | Technology | Cost (Free Tier) |
 |-------|-----------|------|
-| Agent orchestration | LangGraph | Free |
-| AI — parsing | Gemini 1.5 Flash | Free (15 req/min) |
-| AI — classification | Groq / Llama 3.3 70B | Free (14,400 req/day) |
-| Services | FastAPI (Python 3.11) | Free |
-| Message broker | RabbitMQ (CloudAMQP) | Free (1M msg/month) |
-| Real-time | WebSockets | Free |
-| Database | PostgreSQL + pgvector (Supabase) | Free |
-| File storage | GCP Cloud Storage | Free (5GB) |
-| Compute | GCP Cloud Run | Free (2M req/month) |
-| Frontend | Next.js (Vercel) | Free |
-| CI/CD | GitHub Actions | Free |
-| Observability | OpenTelemetry + Grafana Cloud | Free |
+| **Agent orchestration** | LangGraph | Free |
+| **AI — parsing** | Gemini 1.5 Flash | Free (15 req/min) |
+| **AI — classification** | Groq / Llama 3.3 70B | Free (14,400 req/day) |
+| **Services** | FastAPI (Python 3.11) | Free |
+| **Message broker** | RabbitMQ (CloudAMQP) | Free (1M msg/month) |
+| **Real-time** | WebSockets | Free |
+| **Database** | PostgreSQL + pgvector (Supabase) | Free |
+| **File storage** | GCP Cloud Storage | Free (5GB) |
+| **Compute** | GCP Cloud Run | Free (2M req/month) |
+| **Frontend** | Next.js (Vercel) | Free |
+| **CI/CD** | GitHub Actions | Free |
+| **Observability** | OpenTelemetry + Grafana Cloud | Free |
 | **Total** | | **₹0/month** |
 
 ---
@@ -165,23 +164,3 @@ npm run dev    # → http://localhost:3000
 | `GCP_PROJECT_ID` | [Google Cloud Console](https://console.cloud.google.com/) | 5 min |
 
 > **Note:** GCP credentials only needed from Phase 6+. Everything before that works without GCP.
-
----
-
-## Development Phases
-
-| Phase | Status | Description |
-|-------|--------|-------------|
-| Phase 1 — Scaffold | ✅ Done | Repo setup, DB schema, shared utilities |
-| Phase 2 — Ingestion | 🔲 Pending | File upload, Tally/Zoho parsing |
-| Phase 3 — Orchestration | 🔲 Pending | LangGraph AI pipeline |
-| Phase 4 — Reports | 🔲 Pending | PDF/Excel + email drafts |
-| Phase 5 — Real-time UI | 🔲 Pending | WebSocket + Next.js dashboard |
-| Phase 6 — CI/CD | 🔲 Pending | GitHub Actions + Docker |
-| Phase 7 — Production | 🔲 Pending | GCP Cloud Run + security |
-
----
-
-## License
-
-MIT
