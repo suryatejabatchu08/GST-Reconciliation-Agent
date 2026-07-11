@@ -60,7 +60,8 @@ class JobStatus(str, Enum):
     MATCHING = "matching"
     CLASSIFYING = "classifying"
     GENERATING_REPORT = "generating_report"
-    COMPLETED = "completed"
+    DONE = "done"               # Report generated — fully complete
+    COMPLETED = "completed"     # Legacy alias for DONE
     FAILED = "failed"
     RETRYING = "retrying"
 
