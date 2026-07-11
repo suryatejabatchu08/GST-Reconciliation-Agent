@@ -1,0 +1,3 @@
+# gateway_service/requirements.txt
+python-jose[cryptography]==3.3.0
+httpx==0.28.1

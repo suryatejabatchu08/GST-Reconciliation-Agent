@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     supabase_url: str = ""
     supabase_anon_key: str = ""
     supabase_service_role_key: str = ""
+    supabase_jwt_secret: str = ""  # Settings → API → JWT Secret
 
     # ── RabbitMQ ───────────────────────────────────────────
     rabbitmq_url: str = "amqp://guest:guest@localhost:5672/"
