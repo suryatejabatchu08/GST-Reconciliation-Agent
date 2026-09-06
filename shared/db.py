@@ -4,9 +4,18 @@ Async SQLAlchemy engine, session factory, and dependency injection helper.
 Used by all services that need database access.
 """
 
+import asyncio
 import logging
+import sys
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
+
+# ── Windows event loop fix ──────────────────────────────────────────────────
+# asyncpg SSL connections fail on Windows with the default ProactorEventLoop
+# (WinError 64: The specified network name is no longer available).
+# Switching to SelectorEventLoop fixes this.
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -31,8 +40,10 @@ def _build_engine(database_url: str) -> AsyncEngine:
         pool_pre_ping=True,                        # Detect stale connections
         pool_recycle=1800,                         # Recycle after 30 min
         connect_args={
-            "statement_cache_size": 0,             # Required for pgBouncer (Supabase pooler)
-            "prepared_statement_cache_size": 0,
+            # Required for Supabase pgBouncer (session pooler)
+            # asyncpg-specific keys — disable prepared statement caching
+            "statement_cache_size": 0,
+            "prepared_statement_name_func": lambda: f"__asyncpg_{id(object())}",
         },
     )
 
